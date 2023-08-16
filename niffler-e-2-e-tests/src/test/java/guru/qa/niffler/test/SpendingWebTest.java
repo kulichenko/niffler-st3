@@ -36,6 +36,7 @@ public class SpendingWebTest {
             category = "Рыбалка",
             username = "maksim"
     )
+
     @Spend(
             username = "maksim",
             description = "Рыбалка на Ладоге",
