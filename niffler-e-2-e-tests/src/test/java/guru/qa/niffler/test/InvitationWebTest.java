@@ -22,7 +22,7 @@ public class InvitationWebTest extends BaseWebTest {
     }
 
     @Test
-    @AllureId("110")
+    @AllureId("102")
     @DisplayName("Проверка наличия статуса 'Pending invitation' на странице '/people'")
     void checkInvitationOnPeoplePageTest() {
         $("li[data-tooltip-id=people]").click();

@@ -26,7 +26,7 @@ public class FriendsWebTest extends BaseWebTest {
     void friendsShouldBeVisibleInTable() throws InterruptedException {
         $("li[data-tooltip-id=friends]").click();
         $(".main-content__section").$("tbody").$$("td")
-                .findBy(Condition.text("You are friends")).shouldBe(Condition.exist);
+                .findBy(Condition.text("You are friends")).shouldBe(Condition.visible);
     }
 
 
