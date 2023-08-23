@@ -127,6 +127,7 @@ dependencies {
     // Wiremock
     testImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
     testImplementation 'com.github.tomakehurst:wiremock-standalone:2.27.2'
+    testImplementation 'org.springframework.security:spring-security-crypto:6.1.0'
 }
 
 tasks.withType(JavaCompile) {
