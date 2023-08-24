@@ -3,6 +3,7 @@ package guru.qa.niffler.db.dao;
 import guru.qa.niffler.db.DataSourceProvider;
 import guru.qa.niffler.db.ServiceDB;
 import guru.qa.niffler.db.model.Authority;
+import guru.qa.niffler.db.model.AuthorityEntity;
 import guru.qa.niffler.db.model.CurrencyValues;
 import guru.qa.niffler.db.model.UserEntity;
 
@@ -11,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
@@ -128,6 +130,70 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
                 usersPs.setString(1, username);
                 usersPs.executeUpdate();
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public UserEntity getUserFromDBById(UUID userId) {
+        var user = new UserEntity();
+        try (Connection conn = authDs.getConnection()) {
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT * FROM users AS ut " +
+                            "JOIN authorities as ata " +
+                            "ON ut.id = ata.user_id WHERE ut.id = ?"
+            )) {
+                ps.setObject(1, userId);
+                ps.execute();
+                var resultSet = ps.getResultSet();
+                if (resultSet.next()) {
+                    var authorities = new ArrayList<AuthorityEntity>();
+                    user.setId((UUID) resultSet.getObject("id"));
+                    user.setUsername(resultSet.getString("username"));
+                    user.setPassword(resultSet.getString("password"));
+                    user.setEnabled(resultSet.getBoolean("enabled"));
+                    user.setAccountNonExpired(resultSet.getBoolean("account_non_expired"));
+                    user.setAccountNonLocked(resultSet.getBoolean("account_non_locked"));
+                    user.setCredentialsNonExpired(resultSet.getBoolean("credentials_non_expired"));
+                    var authority = new AuthorityEntity();
+                    authority.setAuthority(Authority.valueOf(resultSet.getString("authority")));
+                    authorities.add(authority);
+                    while (resultSet.next()) {
+                        var a = new AuthorityEntity();
+                        a.setAuthority(Authority.valueOf(resultSet.getString("authority")));
+                        authorities.add(a);
+                    }
+                    user.setAuthorities(authorities);
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return user;
+    }
+
+
+    @Override
+    public int updateUser(UserEntity user) {
+        try (Connection conn = authDs.getConnection();
+             PreparedStatement ps = conn.prepareStatement(
+                     "UPDATE users SET " +
+                             "password = ?, " +
+                             "enabled = ?, " +
+                             "account_non_expired = ?, " +
+                             "account_non_locked = ? , " +
+                             "credentials_non_expired = ? " +
+                             "WHERE id = ? ")) {
+
+            ps.setString(1, pe.encode(user.getPassword()));
+            ps.setBoolean(2, user.getEnabled());
+            ps.setBoolean(3, user.getAccountNonExpired());
+            ps.setBoolean(4, user.getAccountNonLocked());
+            ps.setBoolean(5, user.getCredentialsNonExpired());
+            ps.setObject(6, user.getId());
+            ps.executeUpdate();
+            return 0;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
