@@ -75,7 +75,28 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
 
     @Override
     public void deleteUserById(UUID userId) {
+        try (Connection conn = authDs.getConnection()) {
+            conn.setAutoCommit(false);
+            try (
+                    PreparedStatement authorityPs = conn.prepareStatement(
+                            "DELETE FROM authorities WHERE user_id=?");
+                    PreparedStatement usersPs = conn.prepareStatement(
+                            "DELETE FROM users WHERE id=?")
+            ) {
 
+                usersPs.setObject(1, userId);
+                authorityPs.setObject(1, userId);
+                authorityPs.executeUpdate();
+                usersPs.executeUpdate();
+                conn.commit();
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                conn.rollback();
+                conn.setAutoCommit(true);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -99,7 +120,16 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
     }
 
     @Override
-    public void deleteUserByIdInUserData(UUID userId) {
+    public void deleteUserByUsernameInUserData(String username) {
+        try (Connection conn = userdataDs.getConnection()) {
+            try (PreparedStatement usersPs = conn.prepareStatement(
+                    "DELETE FROM users WHERE username = ?")) {
 
+                usersPs.setString(1, username);
+                usersPs.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

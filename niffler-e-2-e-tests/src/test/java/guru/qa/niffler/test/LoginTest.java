@@ -50,7 +50,7 @@ public class LoginTest extends BaseWebTest {
 
     @AfterEach
     void deleteUser() {
-        userDataUserDAO.deleteUserByIdInUserData(user.getId());
+        userDataUserDAO.deleteUserByUsernameInUserData(user.getUsername());
         authUserDAO.deleteUserById(user.getId());
     }
 
