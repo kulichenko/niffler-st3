@@ -22,7 +22,7 @@ public class ReceivedWebTest extends BaseWebTest {
     }
 
     @Test
-    @AllureId("111")
+    @AllureId("103")
     @DisplayName("Проверка наличия кнопки 'Submit invitation' на странице '/people'")
     void checkSubmitInvitationButtonOnPeoplePageTest() {
         $("li[data-tooltip-id=people]").click();
@@ -31,7 +31,7 @@ public class ReceivedWebTest extends BaseWebTest {
     }
 
     @Test
-    @AllureId("112")
+    @AllureId("104")
     @DisplayName("Проверка наличия кнопки 'Submit invitation' на странице '/friends'")
     void checkSubmitInvitationButtonOnFriendPageTest() {
         $("li[data-tooltip-id=friends]").click();
