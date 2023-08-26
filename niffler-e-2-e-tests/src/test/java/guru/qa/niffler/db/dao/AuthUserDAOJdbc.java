@@ -136,7 +136,7 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
     }
 
     @Override
-    public UserEntity getUserFromDBById(UUID userId) {
+    public UserEntity getUserById(UUID userId) {
         var user = new UserEntity();
         try (Connection conn = authDs.getConnection()) {
             try (PreparedStatement ps = conn.prepareStatement(

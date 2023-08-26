@@ -1,7 +1,6 @@
 package guru.qa.niffler.jupiter;
 
 import guru.qa.niffler.db.dao.AuthUserDAO;
-import guru.qa.niffler.db.dao.AuthUserDAOJdbc;
 import guru.qa.niffler.db.dao.UserDataUserDAO;
 import guru.qa.niffler.db.model.Authority;
 import guru.qa.niffler.db.model.AuthorityEntity;
@@ -17,9 +16,9 @@ import java.util.Arrays;
 
 public class DBUserExtension implements BeforeEachCallback, ParameterResolver, AfterTestExecutionCallback {
 
-    private static final AuthUserDAO authUserDAO = new AuthUserDAOJdbc();
-    private static final UserDataUserDAO userDataUserDAO = new AuthUserDAOJdbc();
     public static ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(DBUserExtension.class);
+    private AuthUserDAO authUserDAO;
+    private UserDataUserDAO userDataUserDAO;
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
@@ -40,6 +39,8 @@ public class DBUserExtension implements BeforeEachCallback, ParameterResolver, A
                     }).toList()
             );
             context.getStore(NAMESPACE).put("user", user);
+            authUserDAO = (AuthUserDAO) context.getStore(NAMESPACE).get("authUserDAO");
+            userDataUserDAO = (UserDataUserDAO) context.getStore(NAMESPACE).get("userDataUserDAO");
             authUserDAO.createUser(user);
             userDataUserDAO.createUserInUserData(user);
         }
@@ -48,6 +49,8 @@ public class DBUserExtension implements BeforeEachCallback, ParameterResolver, A
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {
         var user = context.getStore(NAMESPACE).get("user", UserEntity.class);
+        authUserDAO = (AuthUserDAO) context.getStore(NAMESPACE).get("authUserDAO");
+        userDataUserDAO = (UserDataUserDAO) context.getStore(NAMESPACE).get("userDataUserDAO");
         userDataUserDAO.deleteUserByUsernameInUserData(user.getUsername());
         authUserDAO.deleteUserById(user.getId());
     }

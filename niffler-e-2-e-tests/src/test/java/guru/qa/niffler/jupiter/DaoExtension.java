@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import java.lang.reflect.Field;
 
 public class DaoExtension implements TestInstancePostProcessor {
+    public static ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(DBUserExtension.class);
     @Override
     public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
         for (Field field : testInstance.getClass().getDeclaredFields()) {
@@ -27,7 +28,11 @@ public class DaoExtension implements TestInstancePostProcessor {
                 } else {
                     dao = new AuthUserDAOJdbc();
                 }
-
+                if (field.getType().isAssignableFrom(AuthUserDAO.class)) {
+                    context.getStore(NAMESPACE).put("authUserDAO", dao);
+                } else if (field.getType().isAssignableFrom(UserDataUserDAO.class)) {
+                    context.getStore(NAMESPACE).put("userDataUserDAO", dao);
+                }
                 field.set(testInstance, dao);
             }
         }
