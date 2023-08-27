@@ -21,7 +21,7 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
     private static DataSource userdataDs = DataSourceProvider.INSTANCE.getDataSource(ServiceDB.USERDATA);
 
     @Override
-    public int createUser(UserEntity user) {
+    public UUID createUser(UserEntity user) {
         int createdRows = 0;
         try (Connection conn = authDs.getConnection()) {
 
@@ -72,7 +72,7 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
             throw new RuntimeException(e);
         }
 
-        return createdRows;
+        return user.getId();
     }
 
     @Override

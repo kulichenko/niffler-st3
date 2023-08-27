@@ -2,8 +2,10 @@ package guru.qa.niffler.db.dao;
 
 import guru.qa.niffler.db.DataSourceProvider;
 import guru.qa.niffler.db.ServiceDB;
+import guru.qa.niffler.db.mapper.AuthorityEntityRowMapper;
 import guru.qa.niffler.db.mapper.UserEntityRowMapper;
 import guru.qa.niffler.db.model.Authority;
+import guru.qa.niffler.db.model.AuthorityEntity;
 import guru.qa.niffler.db.model.CurrencyValues;
 import guru.qa.niffler.db.model.UserEntity;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -15,6 +17,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.UUID;
 
 public class AuthUserDAOSpringJdbc implements AuthUserDAO, UserDataUserDAO {
@@ -39,7 +42,7 @@ public class AuthUserDAOSpringJdbc implements AuthUserDAO, UserDataUserDAO {
 
     @Override
     @SuppressWarnings("unchecked")
-    public int createUser(UserEntity user) {
+    public UUID createUser(UserEntity user) {
         return authTtpl.execute(status -> {
             var kh = new GeneratedKeyHolder();
             authJdbcTemplate.update(con -> {
@@ -69,25 +72,31 @@ public class AuthUserDAOSpringJdbc implements AuthUserDAO, UserDataUserDAO {
                         }
                     }
             );
-            return 1;
+            return userId;
         });
     }
 
     @Override
     public void deleteUserById(UUID userId) {
-        userDataJdbcTemplate.update("DELETE FROM users WHERE id = ?", userId);
-
+        authJdbcTemplate.update("DELETE FROM authorities WHERE user_id = ? ", userId);
+        authJdbcTemplate.update("DELETE FROM users WHERE id = ?", userId);
     }
 
     @Override
     public UserEntity getUserById(UUID userId) {
         var user = authJdbcTemplate.queryForObject(
-                "SELECT * FROM users AS ut " +
-                        "JOIN authorities as ata " +
-                        "ON ut.id = ata.user_id WHERE ut.id = ?",
+                "SELECT * FROM users WHERE id = ?",
                 UserEntityRowMapper.instance,
                 userId
         );
+        if (user != null) {
+            List<AuthorityEntity> authorities = authJdbcTemplate.query(
+                    "SELECT * FROM authorities WHERE user_id = ? ",
+                    AuthorityEntityRowMapper.instance,
+                    user.getId()
+            );
+            user.setAuthorities(authorities);
+        }
         return user;
     }
 
@@ -99,7 +108,9 @@ public class AuthUserDAOSpringJdbc implements AuthUserDAO, UserDataUserDAO {
     @Override
     public int createUserInUserData(UserEntity user) {
         return userDataJdbcTemplate.update("INSERT INTO users (username, currency) " +
-                "VALUES (?, ?)", user.getUsername(), CurrencyValues.RUB.name());
+                        "VALUES (?, ?)",
+                user.getUsername(),
+                CurrencyValues.RUB.name());
     }
 
     @Override

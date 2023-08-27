@@ -38,11 +38,12 @@ public class DBUserExtension implements BeforeEachCallback, ParameterResolver, A
                         return ae;
                     }).toList()
             );
-            context.getStore(NAMESPACE).put("user", user);
             authUserDAO = (AuthUserDAO) context.getStore(NAMESPACE).get("authUserDAO");
             userDataUserDAO = (UserDataUserDAO) context.getStore(NAMESPACE).get("userDataUserDAO");
-            authUserDAO.createUser(user);
+            var userId = authUserDAO.createUser(user);
+            user.setId(userId);
             userDataUserDAO.createUserInUserData(user);
+            context.getStore(NAMESPACE).put("user", user);
         }
     }
 

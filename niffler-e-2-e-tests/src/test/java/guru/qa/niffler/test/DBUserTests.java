@@ -36,7 +36,7 @@ public class DBUserTests extends BaseWebTest {
         $(".main-content__section-stats").should(Condition.visible);
     }
 
-    @DBUser(username = "user_12", password = "12345")
+    @DBUser(username = "user_02", password = "12345")
     @Test
     void selectUserFromDbTest(UserEntity user) {
         var userFromDb = authUserDAO.getUserById(user.getId());
