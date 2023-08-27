@@ -1,7 +1,7 @@
 package guru.qa.niffler.jupiter;
 
+import com.github.javafaker.Faker;
 import guru.qa.niffler.db.dao.AuthUserDAO;
-import guru.qa.niffler.db.dao.AuthUserDAOJdbc;
 import guru.qa.niffler.db.dao.UserDataUserDAO;
 import guru.qa.niffler.db.model.Authority;
 import guru.qa.niffler.db.model.AuthorityEntity;
@@ -17,17 +17,27 @@ import java.util.Arrays;
 
 public class DBUserExtension implements BeforeEachCallback, ParameterResolver, AfterTestExecutionCallback {
 
-    private static final AuthUserDAO authUserDAO = new AuthUserDAOJdbc();
-    private static final UserDataUserDAO userDataUserDAO = new AuthUserDAOJdbc();
     public static ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(DBUserExtension.class);
+    private AuthUserDAO authUserDAO;
+    private UserDataUserDAO userDataUserDAO;
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
         DBUser annotation = context.getRequiredTestMethod().getAnnotation(DBUser.class);
+
         if (annotation != null) {
             UserEntity user = new UserEntity();
-            user.setUsername(annotation.username());
-            user.setPassword(annotation.password());
+            Faker faker = new Faker();
+            if (annotation.username().isEmpty()) {
+                user.setUsername(faker.name().username());
+            } else {
+                user.setUsername(annotation.username());
+            }
+            if (annotation.password().isEmpty()) {
+                user.setPassword(faker.internet().password());
+            } else {
+                user.setPassword(annotation.password());
+            }
             user.setEnabled(true);
             user.setAccountNonExpired(true);
             user.setAccountNonLocked(true);
@@ -39,15 +49,20 @@ public class DBUserExtension implements BeforeEachCallback, ParameterResolver, A
                         return ae;
                     }).toList()
             );
-            context.getStore(NAMESPACE).put("user", user);
-            authUserDAO.createUser(user);
+            authUserDAO = (AuthUserDAO) context.getStore(NAMESPACE).get("authUserDAO");
+            userDataUserDAO = (UserDataUserDAO) context.getStore(NAMESPACE).get("userDataUserDAO");
+            var userId = authUserDAO.createUser(user);
+            user.setId(userId);
             userDataUserDAO.createUserInUserData(user);
+            context.getStore(NAMESPACE).put("user", user);
         }
     }
 
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {
         var user = context.getStore(NAMESPACE).get("user", UserEntity.class);
+        authUserDAO = (AuthUserDAO) context.getStore(NAMESPACE).get("authUserDAO");
+        userDataUserDAO = (UserDataUserDAO) context.getStore(NAMESPACE).get("userDataUserDAO");
         userDataUserDAO.deleteUserByUsernameInUserData(user.getUsername());
         authUserDAO.deleteUserById(user.getId());
     }

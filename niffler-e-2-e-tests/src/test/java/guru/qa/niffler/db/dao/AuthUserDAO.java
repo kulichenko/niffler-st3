@@ -10,11 +10,11 @@ import java.util.UUID;
 public interface AuthUserDAO {
     PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    int createUser(UserEntity user);
+    UUID createUser(UserEntity user);
 
     void deleteUserById(UUID userId);
 
-    UserEntity getUserFromDBById(UUID userId);
+    UserEntity getUserById(UUID userId);
 
     int updateUser(UserEntity user);
 }
