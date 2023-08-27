@@ -14,9 +14,20 @@ import jakarta.persistence.Table;
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity
+@Table(name = "authorities")
 public class AuthorityEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
     private UUID id;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Authority authority;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 
     public UUID getId() {
@@ -55,5 +66,4 @@ public class AuthorityEntity {
     public int hashCode() {
         return Objects.hash(id, authority, user);
     }
-
 }
