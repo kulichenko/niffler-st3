@@ -22,7 +22,6 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
 
     @Override
     public UUID createUser(UserEntity user) {
-        int createdRows = 0;
         try (Connection conn = authDs.getConnection()) {
 
             conn.setAutoCommit(false);
@@ -42,7 +41,6 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
                 usersPs.setBoolean(5, user.getAccountNonLocked());
                 usersPs.setBoolean(6, user.getCredentialsNonExpired());
 
-                createdRows = usersPs.executeUpdate();
                 UUID generatedUserId;
 
                 try (ResultSet generatedKeys = usersPs.getGeneratedKeys()) {
