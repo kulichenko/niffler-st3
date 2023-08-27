@@ -25,7 +25,7 @@ public class DBUserTests extends BaseWebTest {
     @Dao
     private UserDataUserDAO userDataUserDAO;
 
-    @DBUser(username = "user_01", password = "12345")
+    @DBUser()
     @Test
     void mainPageShouldBeVisibleAfterLogin(UserEntity user) {
         Selenide.open("http://127.0.0.1:3000/main");
@@ -36,7 +36,7 @@ public class DBUserTests extends BaseWebTest {
         $(".main-content__section-stats").should(Condition.visible);
     }
 
-    @DBUser(username = "user_02", password = "12345")
+    @DBUser()
     @Test
     void selectUserFromDbTest(UserEntity user) {
         var userFromDb = authUserDAO.getUserById(user.getId());
@@ -48,7 +48,7 @@ public class DBUserTests extends BaseWebTest {
         );
     }
 
-    @DBUser(username = "user_03", password = "12345")
+    @DBUser()
     @Test
     void updateUserTest(UserEntity user) {
         var userFromDb = authUserDAO.getUserById(user.getId());

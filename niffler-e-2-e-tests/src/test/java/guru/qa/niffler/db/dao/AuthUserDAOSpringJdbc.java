@@ -102,6 +102,22 @@ public class AuthUserDAOSpringJdbc implements AuthUserDAO, UserDataUserDAO {
 
     @Override
     public int updateUser(UserEntity user) {
+        authJdbcTemplate.update(
+                "UPDATE users SET " +
+                        "username = ?, " +
+                        "password = ?, " +
+                        "enabled = ?, " +
+                        "account_non_expired = ?, " +
+                        "account_non_locked = ? , " +
+                        "credentials_non_expired = ? " +
+                        "WHERE id = ? ",
+                user.getUsername(),
+                pe.encode(user.getPassword()),
+                user.getEnabled(),
+                user.getAccountNonExpired(),
+                user.getAccountNonLocked(),
+                user.getCredentialsNonExpired(),
+                user.getId());
         return 0;
     }
 
