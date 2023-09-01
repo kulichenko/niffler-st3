@@ -2,12 +2,15 @@ package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.db.ServiceDB;
 import guru.qa.niffler.db.dao.AuthUserDAO;
 import guru.qa.niffler.db.dao.UserDataUserDAO;
+import guru.qa.niffler.db.jpa.EntityManagerFactoryProvider;
 import guru.qa.niffler.db.model.auth.AuthUserEntity;
 import guru.qa.niffler.jupiter.annotations.DBUser;
 import guru.qa.niffler.jupiter.annotations.Dao;
 import guru.qa.niffler.jupiter.extensions.DaoExtension;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -51,8 +54,8 @@ public class DBUserTests extends BaseWebTest {
     @DBUser()
     @Test
     void updateUserTest(AuthUserEntity user) {
-//        var userFromDb = authUserDAO.getUserById(user.getId());
-//        assertTrue(userFromDb.getAccountNonLocked(), "account locked");
+        var userFromDb = authUserDAO.getUserById(user.getId());
+        assertTrue(userFromDb.getAccountNonLocked(), "account locked");
         user.setAccountNonLocked(false);
         AuthUserEntity authUserEntity = authUserDAO.updateUser(user);
         assertFalse(authUserEntity.getAccountNonLocked(), "account not locked");
