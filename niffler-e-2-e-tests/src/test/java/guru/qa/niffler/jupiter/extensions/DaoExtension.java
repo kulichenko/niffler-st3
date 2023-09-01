@@ -1,17 +1,23 @@
-package guru.qa.niffler.jupiter;
+package guru.qa.niffler.jupiter.extensions;
 
 import guru.qa.niffler.db.dao.AuthUserDAO;
 import guru.qa.niffler.db.dao.AuthUserDAOHibernate;
+import guru.qa.niffler.db.dao.AuthUserDAOJdbc;
 import guru.qa.niffler.db.dao.AuthUserDAOSpringJdbc;
 import guru.qa.niffler.db.dao.UserDataUserDAO;
+import guru.qa.niffler.db.dao.UserDataUserDAOHibernate;
+import guru.qa.niffler.jupiter.annotations.Dao;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
 import java.lang.reflect.Field;
 
+import static guru.qa.niffler.jupiter.extensions.DBUserExtension.NAMESPACE;
+
 public class DaoExtension implements TestInstancePostProcessor {
     private static final String DB_IMPL = System.getProperty("db.impl");
-    public static ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(DBUserExtension.class);
+    private static final String AUTH_USER_DAO = "authUserDAO";
+    private static final String USER_DATA_USER_DAO = "userDataUserDAO";
 
     @Override
     public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
@@ -21,21 +27,28 @@ public class DaoExtension implements TestInstancePostProcessor {
                 field.setAccessible(true);
 
                 AuthUserDAO dao;
+                UserDataUserDAO userDataUserDAO = null;
 
                 if ("hibernate".equals(DB_IMPL)) {
                     dao = new AuthUserDAOHibernate();
                 } else if ("spring".equals(DB_IMPL)) {
                     dao = new AuthUserDAOSpringJdbc();
                 } else {
+                    dao = new AuthUserDAOHibernate();
+                    userDataUserDAO = new UserDataUserDAOHibernate();
+/*
                     dao = new AuthUserDAOSpringJdbc();
-//                    dao = new AuthUserDAOJdbc();
+                    dao = new AuthUserDAOJdbc();
+*/
                 }
                 if (field.getType().isAssignableFrom(AuthUserDAO.class)) {
-                    context.getStore(NAMESPACE).put("authUserDAO", dao);
+                    context.getStore(NAMESPACE).put(AUTH_USER_DAO, dao);
+                    field.set(testInstance, dao);
                 } else if (field.getType().isAssignableFrom(UserDataUserDAO.class)) {
-                    context.getStore(NAMESPACE).put("userDataUserDAO", dao);
+                    context.getStore(NAMESPACE).put(USER_DATA_USER_DAO, userDataUserDAO);
+                    field.set(testInstance, userDataUserDAO);
+                    System.out.println();
                 }
-                field.set(testInstance, dao);
             }
         }
     }

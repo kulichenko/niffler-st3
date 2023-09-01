@@ -1,13 +1,12 @@
-package guru.qa.niffler.jupiter;
+package guru.qa.niffler.jupiter.extensions;
 
 import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.SpendJson;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
-import static guru.qa.niffler.jupiter.CategoryExtension.NAMESPACE;
+import static guru.qa.niffler.jupiter.extensions.CategoryExtension.NAMESPACE;
 
 public class CategoryExtensionParameterResolver implements ParameterResolver {
 

@@ -1,14 +1,11 @@
-package guru.qa.niffler.jupiter;
-
-import org.junit.jupiter.api.extension.ExtendWith;
+package guru.qa.niffler.jupiter.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(BrowserExtension.class)
-public @interface WebTest {
+public @interface Dao {
 }

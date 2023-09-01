@@ -1,6 +1,6 @@
 package guru.qa.niffler.db.dao;
 
-import guru.qa.niffler.db.model.UserEntity;
+import guru.qa.niffler.db.model.auth.AuthUserEntity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -10,11 +10,11 @@ import java.util.UUID;
 public interface AuthUserDAO {
     PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    UUID createUser(UserEntity user);
+    UUID createUser(AuthUserEntity user);
 
-    void deleteUserById(UUID userId);
+    void deleteUserById(AuthUserEntity user);
 
-    UserEntity getUserById(UUID userId);
+    AuthUserEntity getUserById(UUID userId);
 
-    int updateUser(UserEntity user);
+    AuthUserEntity updateUser(AuthUserEntity user);
 }
