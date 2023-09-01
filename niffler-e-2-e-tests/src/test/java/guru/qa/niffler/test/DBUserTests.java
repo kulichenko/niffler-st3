@@ -55,6 +55,6 @@ public class DBUserTests extends BaseWebTest {
 //        assertTrue(userFromDb.getAccountNonLocked(), "account locked");
         user.setAccountNonLocked(false);
         AuthUserEntity authUserEntity = authUserDAO.updateUser(user);
-        assertFalse(user.getAccountNonLocked(), "account not locked");
+        assertFalse(authUserEntity.getAccountNonLocked(), "account not locked");
     }
 }

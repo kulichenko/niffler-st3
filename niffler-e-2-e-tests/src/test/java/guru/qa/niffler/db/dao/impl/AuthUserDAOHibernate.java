@@ -1,12 +1,15 @@
-package guru.qa.niffler.db.dao;
+package guru.qa.niffler.db.dao.impl;
 
 import guru.qa.niffler.db.ServiceDB;
+import guru.qa.niffler.db.dao.AuthUserDAO;
 import guru.qa.niffler.db.jpa.EntityManagerFactoryProvider;
 import guru.qa.niffler.db.jpa.JpaService;
-import guru.qa.niffler.db.model.userdata.UserDataUserEntity;
+import guru.qa.niffler.db.model.auth.AuthUserEntity;
 
-public class UserDataUserDAOHibernate extends JpaService implements UserDataUserDAO {
-    public UserDataUserDAOHibernate() {
+import java.util.UUID;
+
+public class AuthUserDAOHibernate extends JpaService implements AuthUserDAO {
+    public AuthUserDAOHibernate() {
         /*
             из лекции 5
             Обратились к синглтону (EntityManagerFactoryProvider). Вызвали у него getDataSource(ServiceDB.AUTH) который
@@ -19,22 +22,30 @@ public class UserDataUserDAOHibernate extends JpaService implements UserDataUser
                     в которых будет AuthUserDAOHibernate у каждого из этих потоков будет свой EntityManager,
                     потому что это обеспечивается методом createEntityManager() нашего декоратора
          */
-        super(EntityManagerFactoryProvider.INSTANCE.getDataSource(ServiceDB.USERDATA).createEntityManager());
+        super(EntityManagerFactoryProvider.INSTANCE.getDataSource(ServiceDB.AUTH).createEntityManager());
     }
 
     @Override
-    public int createUserInUserData(UserDataUserEntity user) {
+    public UUID createUser(AuthUserEntity user) {
+        user.setPassword(pe.encode(user.getPassword()));
         persist(user);
-        return 0;
+        return user.getId();
     }
 
     @Override
-    public void deleteUserByUsernameInUserData(String username) {
-
-    }
-
-    @Override
-    public void deleteUserFromUserData(UserDataUserEntity user) {
+    public void deleteUserById(AuthUserEntity user) {
         remove(user);
+    }
+
+    @Override
+    public AuthUserEntity getUserById(UUID userId) {
+        return em.createQuery("SELECT u FROM AuthUserEntity u WHERE u.id=:id", AuthUserEntity.class)
+                .setParameter("id", userId)
+                .getSingleResult();
+    }
+
+    @Override
+    public AuthUserEntity updateUser(AuthUserEntity user) {
+        return merge(user);
     }
 }

@@ -1,7 +1,9 @@
-package guru.qa.niffler.db.dao;
+package guru.qa.niffler.db.dao.impl;
 
 import guru.qa.niffler.db.DataSourceProvider;
 import guru.qa.niffler.db.ServiceDB;
+import guru.qa.niffler.db.dao.AuthUserDAO;
+import guru.qa.niffler.db.dao.UserDataUserDAO;
 import guru.qa.niffler.db.mapper.AuthorityEntityRowMapper;
 import guru.qa.niffler.db.mapper.UserEntityRowMapper;
 import guru.qa.niffler.db.model.auth.Authority;
