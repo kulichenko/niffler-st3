@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class DBUserExtension implements BeforeEachCallback, ParameterResolver, AfterTestExecutionCallback {
 
@@ -54,7 +55,7 @@ public class DBUserExtension implements BeforeEachCallback, ParameterResolver, A
                         ae.setAuthority(authority);
                         ae.setUser(authUserEntity);
                         return ae;
-                    }).toList()
+                    }).collect(Collectors.toList())
             );
             AuthUserDAO authUserDAO = (AuthUserDAO) context.getStore(NAMESPACE).get(AUTH_USER_DAO);
             UserDataUserDAO userDataUserDAO = (UserDataUserDAO) context.getStore(NAMESPACE).get(USER_DATA_USER_DAO);
