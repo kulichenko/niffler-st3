@@ -2,7 +2,7 @@ package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.annotations.Category;
-import guru.qa.niffler.jupiter.annotations.Spend;
+import guru.qa.niffler.jupiter.annotations.AddSpendViaAPI;
 import guru.qa.niffler.jupiter.annotations.User;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
@@ -34,7 +34,7 @@ public class SpendingWebTest extends BaseWebTest {
             username = "maksim"
     )
 
-    @Spend(
+    @AddSpendViaAPI(
             username = "maksim",
             description = "Рыбалка на Ладоге",
             category = "Рыбалка",

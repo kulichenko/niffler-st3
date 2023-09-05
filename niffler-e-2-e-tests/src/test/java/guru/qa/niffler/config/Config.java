@@ -11,6 +11,8 @@ public interface Config {
 
     String databaseHost();
 
+    String baseUrl();
+
     default String dataBaseUser() {
         return "postgres";
     }

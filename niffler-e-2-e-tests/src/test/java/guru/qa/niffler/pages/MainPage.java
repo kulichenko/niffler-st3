@@ -1,5 +1,6 @@
 package guru.qa.niffler.pages;
 
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.SpendJson;
 import io.qameta.allure.Step;
@@ -44,29 +45,34 @@ public class MainPage extends NifflerBasePage {
     @Step("Add new spend")
     public MainPage addNewSpend(SpendJson spend) {
         selectSpendingCategoryDropDown.click();
-        selectSpendingCategoryDropDown.$$("#react-select-3-listbox").find(text("рыбалка")).click();
+        selectSpendingCategoryDropDown.$$("#react-select-3-listbox").find(text(spend.getCategory())).click();
         setAmountInput.setValue(String.valueOf(spend.getAmount()));
         spendingDescriptionInput.setValue(spend.getDescription());
+        addNewSpendingButton.click();
         return this;
     }
 
     @Step("Check spend in history area")
-    public MainPage checkSpendsInHistory(SpendJson spendJson) {
-        $(".spendings__content tbody")
+    public MainPage checkSpendsInHistory(SpendJson spend) {
+        ElementsCollection td = $(".spendings__content tbody")
                 .$$("tr")
-                .find(text(spendJson.getDescription()))
-                .$$("td")
-                .first()
+                .find(text(spend.getDescription()))
                 .scrollTo()
-                .click();
+                .$$("td");
+
+        td.find(text(spend.getDescription())).should(visible);
+        td.find(text(spend.getCategory())).should(visible);
+        td.find(text(spend.getCurrency().name())).should(visible);
+        td.find(text(String.valueOf(Math.round(spend.getAmount())))).should(visible);
+
         return this;
     }
 
     @Step("Delete spend in history area")
-    public MainPage deleteSpendInHistory(SpendJson spendJson) {
+    public MainPage deleteSpendInHistory(SpendJson spend) {
         $(".spendings__content tbody")
                 .$$("tr")
-                .find(text(spendJson.getDescription()))
+                .find(text(spend.getDescription()))
                 .$$("td")
                 .first()
                 .scrollTo()
@@ -76,7 +82,7 @@ public class MainPage extends NifflerBasePage {
 
         $(".spendings__content tbody")
                 .$$("tr")
-                .find(text(spendJson.getDescription()))
+                .find(text(spend.getDescription()))
                 .$$("td")
                 .shouldHave(size(0));
         return this;

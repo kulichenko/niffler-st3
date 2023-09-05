@@ -1,6 +1,7 @@
 package guru.qa.niffler.jupiter.annotations;
 
-import guru.qa.niffler.jupiter.extensions.CategoryExtension;
+
+import guru.qa.niffler.jupiter.extensions.DeleteUserFromDBExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.ElementType;
@@ -10,11 +11,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(CategoryExtension.class)
-public @interface Category {
-
-    String category();
-
-    String username();
-
+@ExtendWith(DeleteUserFromDBExtension.class)
+public @interface DeleteUserFromDB {
+    String user();
 }

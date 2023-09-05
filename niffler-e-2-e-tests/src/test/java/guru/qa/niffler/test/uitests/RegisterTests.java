@@ -6,41 +6,45 @@ import guru.qa.niffler.db.dao.UserDataUserDAO;
 import guru.qa.niffler.db.model.auth.AuthUserEntity;
 import guru.qa.niffler.jupiter.annotations.AddUserToDB;
 import guru.qa.niffler.jupiter.annotations.Dao;
+import guru.qa.niffler.jupiter.annotations.DeleteUserFromDB;
 import guru.qa.niffler.jupiter.extensions.DaoExtension;
 import guru.qa.niffler.pages.WelcomePage;
 import guru.qa.niffler.test.BaseWebTest;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 @ExtendWith(DaoExtension.class)
-public class LoginTest extends BaseWebTest {
+public class RegisterTests extends BaseWebTest {
+
     @Dao
     private AuthUserDAO authUserDAO;
     @Dao
     private UserDataUserDAO userDataUserDAO;
 
-    @AddUserToDB
-    @Test
-    @AllureId("1")
-    void loginTest(AuthUserEntity user) {
+    @CsvSource(value = {"Ivan.Ivanovich, 12345"})
+    @ParameterizedTest(name = "Register new user {0}")
+    @AllureId("5")
+    @DeleteUserFromDB(user = "Ivan.Ivanovich")
+    void registerNewUserTest(String user, String pass) {
         Selenide.open(cfg.baseUrl(), WelcomePage.class)
+                .toRegisterNewUser()
                 .checkPageLoaded()
-                .goToLoginPage()
-                .checkPageLoaded()
-                .login(user.getUsername(), user.getPassword())
+                .registerNewUser(user, pass)
+                .login(user, pass)
                 .checkPageLoaded();
     }
 
 
     @AddUserToDB
     @Test
-    @AllureId("2")
-    void incorrectUserLoginTest(AuthUserEntity user) {
+    void registerExistingUser(AuthUserEntity user) {
         Selenide.open(cfg.baseUrl(), WelcomePage.class)
+                .toRegisterNewUser()
                 .checkPageLoaded()
-                .goToLoginPage()
-                .checkPageLoaded()
-                .wrongUsernameLogin(user.getUsername(), user.getPassword());
+                .registerExistUser(user.getUsername(), user.getPassword())
+                .checkExistUser(user.getUsername());
     }
 }

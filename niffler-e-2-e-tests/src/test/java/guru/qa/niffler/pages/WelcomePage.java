@@ -37,8 +37,8 @@ public class WelcomePage extends NifflerBasePage {
         return new LoginPage();
     }
 
-    public RegisterPage signUp() {
-
+    public RegisterPage toRegisterNewUser() {
+        registerButton.click();
         return new RegisterPage();
     }
 
