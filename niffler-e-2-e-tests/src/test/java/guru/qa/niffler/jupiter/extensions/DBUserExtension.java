@@ -57,6 +57,7 @@ public class DBUserExtension implements BeforeEachCallback, ParameterResolver, A
                         return ae;
                     }).collect(Collectors.toList())
             );
+            var pass = authUserEntity.getPassword();
             AuthUserDAO authUserDAO = (AuthUserDAO) context.getStore(NAMESPACE).get(AUTH_USER_DAO);
             UserDataUserDAO userDataUserDAO = (UserDataUserDAO) context.getStore(NAMESPACE).get(USER_DATA_USER_DAO);
             var userId = authUserDAO.createUser(authUserEntity);
@@ -64,6 +65,7 @@ public class DBUserExtension implements BeforeEachCallback, ParameterResolver, A
             userDataUserEntity.setUsername(authUserEntity.getUsername());
             userDataUserEntity.setCurrency(CurrencyValues.RUB);
             userDataUserDAO.createUserInUserData(userDataUserEntity);
+            authUserEntity.setPassword(pass);
             context.getStore(NAMESPACE).put(AUTH_USER, authUserEntity);
             context.getStore(NAMESPACE).put(USER_DATA_USER, userDataUserEntity);
         }
