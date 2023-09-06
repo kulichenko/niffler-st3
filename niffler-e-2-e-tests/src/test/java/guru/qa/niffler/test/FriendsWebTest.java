@@ -22,7 +22,7 @@ public class FriendsWebTest extends BaseWebTest {
     }
 
     @Test
-    @AllureId("101")
+    @AllureId("10")
     void friendsShouldBeVisibleInTable() throws InterruptedException {
         $("li[data-tooltip-id=friends]").click();
         $(".main-content__section").$("tbody").$$("td")

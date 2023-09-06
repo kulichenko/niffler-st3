@@ -1,4 +1,4 @@
-package guru.qa.niffler.test.uitests;
+package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.db.dao.AuthUserDAO;
@@ -9,7 +9,6 @@ import guru.qa.niffler.jupiter.annotations.Dao;
 import guru.qa.niffler.jupiter.annotations.DeleteUserFromDB;
 import guru.qa.niffler.jupiter.extensions.DaoExtension;
 import guru.qa.niffler.pages.WelcomePage;
-import guru.qa.niffler.test.BaseWebTest;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,6 +39,7 @@ public class RegisterTests extends BaseWebTest {
 
     @AddUserToDB
     @Test
+    @AllureId("6")
     void registerExistingUser(AuthUserEntity user) {
         Selenide.open(cfg.baseUrl(), WelcomePage.class)
                 .toRegisterNewUser()

@@ -8,6 +8,7 @@ import guru.qa.niffler.db.model.auth.AuthUserEntity;
 import guru.qa.niffler.jupiter.annotations.AddUserToDB;
 import guru.qa.niffler.jupiter.annotations.Dao;
 import guru.qa.niffler.jupiter.extensions.DaoExtension;
+import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -25,6 +26,7 @@ public class DBUserTests extends BaseWebTest {
     @Dao
     private UserDataUserDAO userDataUserDAO;
 
+    @AllureId("7")
     @AddUserToDB()
     @Test
     void mainPageShouldBeVisibleAfterLogin(AuthUserEntity user) {
@@ -36,6 +38,7 @@ public class DBUserTests extends BaseWebTest {
         $(".main-content__section-stats").should(Condition.visible);
     }
 
+    @AllureId("8")
     @AddUserToDB()
     @Test
     void selectUserFromDbTest(AuthUserEntity user) {
@@ -48,6 +51,7 @@ public class DBUserTests extends BaseWebTest {
         );
     }
 
+    @AllureId("9")
     @AddUserToDB()
     @Test
     void updateUserTest(AuthUserEntity user) {

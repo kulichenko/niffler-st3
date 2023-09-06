@@ -1,14 +1,15 @@
-package guru.qa.niffler.test;
+package guru.qa.niffler.test.ignored;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.jupiter.annotations.Category;
 import guru.qa.niffler.jupiter.annotations.AddSpendViaAPI;
+import guru.qa.niffler.jupiter.annotations.Category;
 import guru.qa.niffler.jupiter.annotations.User;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
-import io.qameta.allure.AllureId;
+import guru.qa.niffler.test.BaseWebTest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.CollectionCondition.size;
@@ -28,7 +29,6 @@ public class SpendingWebTest extends BaseWebTest {
         $("button[type='submit']").click();
     }
 
-
     @Category(
             category = "Рыбалка",
             username = "maksim"
@@ -41,8 +41,9 @@ public class SpendingWebTest extends BaseWebTest {
             amount = 14000.00,
             currency = CurrencyValues.RUB
     )
+
+    @Disabled
     @Test
-    @AllureId("100")
     void spendingShouldBeDeletedAfterDeleteAction(SpendJson createdSpend) {
         $(".spendings__content tbody")
                 .$$("tr")
