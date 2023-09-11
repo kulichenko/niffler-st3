@@ -4,11 +4,12 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.db.dao.AuthUserDAO;
 import guru.qa.niffler.db.dao.UserDataUserDAO;
-import guru.qa.niffler.db.model.Authority;
-import guru.qa.niffler.db.model.AuthorityEntity;
-import guru.qa.niffler.db.model.UserEntity;
-import guru.qa.niffler.jupiter.Dao;
-import guru.qa.niffler.jupiter.DaoExtension;
+import guru.qa.niffler.db.model.auth.Authority;
+import guru.qa.niffler.db.model.auth.AuthorityEntity;
+import guru.qa.niffler.db.model.auth.AuthUserEntity;
+import guru.qa.niffler.db.model.userdata.UserDataUserEntity;
+import guru.qa.niffler.jupiter.annotations.Dao;
+import guru.qa.niffler.jupiter.extensions.DaoExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,40 +27,41 @@ public class LoginTest extends BaseWebTest {
     @Dao
     private UserDataUserDAO userDataUserDAO;
 
-    private UserEntity user;
+    private AuthUserEntity authUser;
+    private UserDataUserEntity userDataUser;
 
     @BeforeEach
     void createUser() {
-        user = new UserEntity();
-        user.setUsername("pavlik");
-        user.setPassword("12345");
-        user.setEnabled(true);
-        user.setAccountNonExpired(true);
-        user.setAccountNonLocked(true);
-        user.setCredentialsNonExpired(true);
-        user.setAuthorities(Arrays.stream(Authority.values())
+        authUser = new AuthUserEntity();
+        authUser.setUsername("pavlik");
+        authUser.setPassword("12345");
+        authUser.setEnabled(true);
+        authUser.setAccountNonExpired(true);
+        authUser.setAccountNonLocked(true);
+        authUser.setCredentialsNonExpired(true);
+        authUser.setAuthorities(Arrays.stream(Authority.values())
                 .map(authority -> {
                     var ae = new AuthorityEntity();
                     ae.setAuthority(authority);
                     return ae;
                 }).toList()
         );
-        authUserDAO.createUser(user);
-        userDataUserDAO.createUserInUserData(user);
+        authUserDAO.createUser(authUser);
+        userDataUserDAO.createUserInUserData(userDataUser);
     }
 
     @AfterEach
     void deleteUser() {
-        userDataUserDAO.deleteUserByUsernameInUserData(user.getUsername());
-        authUserDAO.deleteUserById(user.getId());
+        userDataUserDAO.deleteUserByUsernameInUserData(authUser.getUsername());
+        authUserDAO.deleteUserById(authUser);
     }
 
     @Test
     void mainPageShouldBeVisibleAfterLogin() {
         Selenide.open("http://127.0.0.1:3000/main");
         $("a[href*='redirect']").click();
-        $("input[name='username']").setValue(user.getUsername());
-        $("input[name='password']").setValue(user.getPassword());
+        $("input[name='username']").setValue(authUser.getUsername());
+        $("input[name='password']").setValue(authUser.getPassword());
         $("button[type='submit']").click();
         $(".main-content__section-stats").should(Condition.visible);
     }

@@ -1,5 +1,6 @@
-package guru.qa.niffler.jupiter;
+package guru.qa.niffler.jupiter.extensions;
 
+import guru.qa.niffler.jupiter.annotations.User;
 import guru.qa.niffler.model.UserJson;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +18,9 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static guru.qa.niffler.jupiter.User.UserType.INVITATION_RECEIVED;
-import static guru.qa.niffler.jupiter.User.UserType.INVITATION_SENT;
-import static guru.qa.niffler.jupiter.User.UserType.WITH_FRIENDS;
+import static guru.qa.niffler.jupiter.annotations.User.UserType.INVITATION_RECEIVED;
+import static guru.qa.niffler.jupiter.annotations.User.UserType.INVITATION_SENT;
+import static guru.qa.niffler.jupiter.annotations.User.UserType.WITH_FRIENDS;
 
 public class UserQueueExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
     private static final Map<User.UserType, Queue<UserJson>> usersQueue = new ConcurrentHashMap<>();

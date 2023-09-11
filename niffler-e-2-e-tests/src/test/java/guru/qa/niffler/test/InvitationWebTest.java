@@ -2,7 +2,7 @@ package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.jupiter.User;
+import guru.qa.niffler.jupiter.annotations.User;
 import guru.qa.niffler.model.UserJson;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.BeforeEach;
