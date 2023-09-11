@@ -77,7 +77,7 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
     }
 
     @Override
-    public void deleteUserById(AuthUserEntity user) {
+    public void deleteUser(AuthUserEntity user) {
         try (Connection conn = authDs.getConnection()) {
             conn.setAutoCommit(false);
             try (
@@ -100,6 +100,11 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void deleteUserByUsername(String username) {
+
     }
 
     @Override

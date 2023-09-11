@@ -43,6 +43,7 @@ else
 fi
 
 cd ../
+docker pull selenoid/vnc_chrome:110.0
 docker images
 FRONT_IMAGE="$front_image" docker-compose up -d
 docker ps -a

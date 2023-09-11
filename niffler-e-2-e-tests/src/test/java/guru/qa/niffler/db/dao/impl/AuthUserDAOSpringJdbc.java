@@ -80,9 +80,14 @@ public class AuthUserDAOSpringJdbc implements AuthUserDAO, UserDataUserDAO {
     }
 
     @Override
-    public void deleteUserById(AuthUserEntity user) {
+    public void deleteUser(AuthUserEntity user) {
         authJdbcTemplate.update("DELETE FROM authorities WHERE user_id = ? ", user.getId());
         authJdbcTemplate.update("DELETE FROM users WHERE id = ?", user.getId());
+    }
+
+    @Override
+    public void deleteUserByUsername(String username) {
+
     }
 
     @Override

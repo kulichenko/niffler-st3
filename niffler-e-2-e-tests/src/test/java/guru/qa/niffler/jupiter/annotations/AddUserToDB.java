@@ -1,6 +1,6 @@
 package guru.qa.niffler.jupiter.annotations;
 
-import guru.qa.niffler.jupiter.extensions.CategoryExtension;
+import guru.qa.niffler.jupiter.extensions.DBUserExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.ElementType;
@@ -10,11 +10,9 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(CategoryExtension.class)
-public @interface Category {
+@ExtendWith(DBUserExtension.class)
+public @interface AddUserToDB {
+    String username() default "";
 
-    String category();
-
-    String username();
-
+    String password() default "";
 }

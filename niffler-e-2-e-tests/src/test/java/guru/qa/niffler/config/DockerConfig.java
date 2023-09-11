@@ -12,4 +12,9 @@ public class DockerConfig implements Config {
     public String databaseHost() {
         return "niffler-all-db";
     }
+
+    @Override
+    public String baseUrl() {
+        return null;
+    }
 }

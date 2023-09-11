@@ -8,5 +8,7 @@
         <class>guru.qa.niffler.db.model.userdata.UserDataUserEntity</class>
         <class>guru.qa.niffler.db.model.userdata.FriendsEntity</class>
         <class>guru.qa.niffler.db.model.userdata.FriendsId</class>
+        <class>guru.qa.niffler.db.model.spend.CategoryEntity</class>
+        <class>guru.qa.niffler.db.model.spend.SpendEntity</class>
     </persistence-unit>
 </persistence>

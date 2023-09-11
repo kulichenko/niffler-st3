@@ -15,7 +15,6 @@ public @interface User {
 
     UserType userType();
 
-
     enum UserType {
         WITH_FRIENDS,
         INVITATION_SENT,

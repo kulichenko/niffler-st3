@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
 import java.lang.reflect.Field;
 
-import static guru.qa.niffler.jupiter.extensions.DBUserExtension.NAMESPACE;
+import static guru.qa.niffler.jupiter.extensions.DBUserExtension.NAMESPACE_USER;
 
 public class DaoExtension implements TestInstancePostProcessor {
     private static final String DB_IMPL = System.getProperty("db.impl");
@@ -41,10 +41,10 @@ public class DaoExtension implements TestInstancePostProcessor {
 */
                 }
                 if (field.getType().isAssignableFrom(AuthUserDAO.class)) {
-                    context.getStore(NAMESPACE).put(AUTH_USER_DAO, dao);
+                    context.getStore(NAMESPACE_USER).put(AUTH_USER_DAO, dao);
                     field.set(testInstance, dao);
                 } else if (field.getType().isAssignableFrom(UserDataUserDAO.class)) {
-                    context.getStore(NAMESPACE).put(USER_DATA_USER_DAO, userDataUserDAO);
+                    context.getStore(NAMESPACE_USER).put(USER_DATA_USER_DAO, userDataUserDAO);
                     field.set(testInstance, userDataUserDAO);
                     System.out.println();
                 }

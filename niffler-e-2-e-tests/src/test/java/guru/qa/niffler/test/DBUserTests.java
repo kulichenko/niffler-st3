@@ -2,15 +2,13 @@ package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.db.ServiceDB;
 import guru.qa.niffler.db.dao.AuthUserDAO;
 import guru.qa.niffler.db.dao.UserDataUserDAO;
-import guru.qa.niffler.db.jpa.EntityManagerFactoryProvider;
 import guru.qa.niffler.db.model.auth.AuthUserEntity;
-import guru.qa.niffler.jupiter.annotations.DBUser;
+import guru.qa.niffler.jupiter.annotations.AddUserToDB;
 import guru.qa.niffler.jupiter.annotations.Dao;
 import guru.qa.niffler.jupiter.extensions.DaoExtension;
-import jakarta.persistence.EntityManager;
+import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -28,7 +26,8 @@ public class DBUserTests extends BaseWebTest {
     @Dao
     private UserDataUserDAO userDataUserDAO;
 
-    @DBUser()
+    @AllureId("7")
+    @AddUserToDB()
     @Test
     void mainPageShouldBeVisibleAfterLogin(AuthUserEntity user) {
         Selenide.open("http://127.0.0.1:3000/main");
@@ -39,7 +38,8 @@ public class DBUserTests extends BaseWebTest {
         $(".main-content__section-stats").should(Condition.visible);
     }
 
-    @DBUser()
+    @AllureId("8")
+    @AddUserToDB()
     @Test
     void selectUserFromDbTest(AuthUserEntity user) {
         var userFromDb = authUserDAO.getUserById(user.getId());
@@ -51,7 +51,8 @@ public class DBUserTests extends BaseWebTest {
         );
     }
 
-    @DBUser()
+    @AllureId("9")
+    @AddUserToDB()
     @Test
     void updateUserTest(AuthUserEntity user) {
         var userFromDb = authUserDAO.getUserById(user.getId());
