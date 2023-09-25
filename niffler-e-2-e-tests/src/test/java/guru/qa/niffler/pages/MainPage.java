@@ -14,6 +14,8 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class MainPage extends NifflerBasePage {
 
+    public static final String URL = "/main";
+
     //Statistic area
     private final SelenideElement statisticArea = $(".main-content__section-stats");    //Add new spending area
     private final SelenideElement

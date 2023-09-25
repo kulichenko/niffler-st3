@@ -8,10 +8,12 @@ import guru.qa.niffler.db.model.spend.CategoryEntity;
 import guru.qa.niffler.jupiter.annotations.AddCategoryToDB;
 import guru.qa.niffler.jupiter.annotations.AddSpendViaAPI;
 import guru.qa.niffler.jupiter.annotations.AddUserToDB;
+import guru.qa.niffler.jupiter.annotations.ApiLogin;
 import guru.qa.niffler.jupiter.annotations.Dao;
 import guru.qa.niffler.jupiter.extensions.DaoExtension;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.pages.MainPage;
 import guru.qa.niffler.pages.WelcomePage;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.Test;
@@ -59,5 +61,15 @@ public class SpendTests extends BaseWebTest {
                 .deleteSpendInHistory(spend);
     }
 
-
+    @AddUserToDB
+    @ApiLogin()
+    @AddCategoryToDB
+    @AddSpendViaAPI
+    @Test
+    @AllureId("14")
+    void apiLoginDeleteSpendTest(SpendJson spend) {
+        Selenide.open(cfg.baseUrl() + MainPage.URL, MainPage.class)
+                .checkPageLoaded()
+                .deleteSpendInHistory(spend);
+    }
 }
