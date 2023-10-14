@@ -18,6 +18,16 @@ public class LocalConfig implements Config {
     }
 
     @Override
+    public String getCurrencyGrpcAddress() {
+        return "localhost";
+    }
+
+    @Override
+    public int getCurrencyGrpcPort() {
+        return 8092;
+    }
+
+    @Override
     public String nifflerAuthUrl() {
         return "http://127.0.0.1:9000";
     }

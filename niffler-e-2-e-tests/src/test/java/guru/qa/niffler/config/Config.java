@@ -13,6 +13,10 @@ public interface Config {
 
     String baseUrl();
 
+    String getCurrencyGrpcAddress();
+
+    int getCurrencyGrpcPort();
+
     default String dataBaseUser() {
         return "postgres";
     }
