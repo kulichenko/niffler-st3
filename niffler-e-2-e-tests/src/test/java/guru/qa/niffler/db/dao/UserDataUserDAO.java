@@ -8,4 +8,6 @@ public interface UserDataUserDAO {
     void deleteUserByUsernameInUserData(String username);
 
     void deleteUserFromUserData(UserDataUserEntity user);
+
+    UserDataUserEntity getUserInUserDataByUsername(String username);
 }

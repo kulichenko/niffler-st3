@@ -15,4 +15,6 @@ public @interface ApiLogin {
     String username() default "";
 
     String password() default "";
+
+    GenerateUser user() default @GenerateUser(handleAnnotation = false);
 }

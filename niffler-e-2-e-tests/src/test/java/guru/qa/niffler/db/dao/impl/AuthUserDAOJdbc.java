@@ -147,6 +147,11 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
     }
 
     @Override
+    public UserDataUserEntity getUserInUserDataByUsername(String username) {
+        return null;
+    }
+
+    @Override
     public AuthUserEntity getUserById(UUID userId) {
         var user = new AuthUserEntity();
         try (Connection conn = authDs.getConnection()) {

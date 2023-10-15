@@ -2,8 +2,10 @@ package guru.qa.niffler.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import guru.qa.niffler.db.model.auth.AuthUserEntity;
 import guru.qa.niffler.jupiter.annotations.User;
 
+import java.util.List;
 import java.util.UUID;
 
 public class UserJson {
@@ -23,27 +25,13 @@ public class UserJson {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private FriendState friendState;
 
-    private transient String password;
-
-    private transient User.UserType userType;
+    transient String password;
+    transient User.UserType userType;
+    transient List<UserJson> friends;
+    transient List<UserJson> incomeInvitations;
+    transient List<UserJson> outcomeInvitations;
 
     public UserJson() {
-    }
-
-    public User.UserType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(User.UserType userType) {
-        this.userType = userType;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public UUID getId() {
@@ -100,5 +88,52 @@ public class UserJson {
 
     public void setFriendState(FriendState friendState) {
         this.friendState = friendState;
+    }
+
+    public static UserJson fromEntity(AuthUserEntity entity) {
+        UserJson usr = new UserJson();
+        usr.setId(entity.getId());
+        usr.setUsername(entity.getUsername());
+        return usr;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public User.UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(User.UserType userType) {
+        this.userType = userType;
+    }
+
+    public List<UserJson> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<UserJson> friends) {
+        this.friends = friends;
+    }
+
+    public List<UserJson> getIncomeInvitations() {
+        return incomeInvitations;
+    }
+
+    public void setIncomeInvitations(List<UserJson> incomeInvitations) {
+        this.incomeInvitations = incomeInvitations;
+    }
+
+    public List<UserJson> getOutcomeInvitations() {
+        return outcomeInvitations;
+    }
+
+    public void setOutcomeInvitations(List<UserJson> outcomeInvitations) {
+        this.outcomeInvitations = outcomeInvitations;
     }
 }

@@ -42,4 +42,9 @@ public class UserDataUserDAOHibernate extends JpaService implements UserDataUser
     public void deleteUserFromUserData(UserDataUserEntity user) {
         remove(user);
     }
+
+    @Override
+    public UserDataUserEntity getUserInUserDataByUsername(String username) {
+        return null;
+    }
 }

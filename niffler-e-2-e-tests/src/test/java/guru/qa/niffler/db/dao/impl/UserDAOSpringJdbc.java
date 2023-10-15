@@ -23,13 +23,13 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.UUID;
 
-public class AuthUserDAOSpringJdbc implements AuthUserDAO, UserDataUserDAO {
+public class UserDAOSpringJdbc implements AuthUserDAO, UserDataUserDAO {
     private final TransactionTemplate authTtpl;
     private final TransactionTemplate userdataTtpl;
     private final JdbcTemplate authJdbcTemplate;
     private final JdbcTemplate userDataJdbcTemplate;
 
-    public AuthUserDAOSpringJdbc() {
+    public UserDAOSpringJdbc() {
         JdbcTransactionManager authTm = new JdbcTransactionManager(
                 DataSourceProvider.INSTANCE.getDataSource(ServiceDB.AUTH)
         );
@@ -145,5 +145,10 @@ public class AuthUserDAOSpringJdbc implements AuthUserDAO, UserDataUserDAO {
     @Override
     public void deleteUserFromUserData(UserDataUserEntity user) {
 
+    }
+
+    @Override
+    public UserDataUserEntity getUserInUserDataByUsername(String username) {
+        return null;
     }
 }

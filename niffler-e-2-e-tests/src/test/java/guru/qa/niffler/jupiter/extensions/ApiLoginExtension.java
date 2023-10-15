@@ -6,9 +6,10 @@ import guru.qa.niffler.api.AuthServiceClient;
 import guru.qa.niffler.api.context.CookieContext;
 import guru.qa.niffler.api.context.SessionStorageContext;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.db.model.auth.AuthUserEntity;
-import guru.qa.niffler.jupiter.annotations.AddUserToDB;
 import guru.qa.niffler.jupiter.annotations.ApiLogin;
+import guru.qa.niffler.jupiter.annotations.GenerateUser;
+import guru.qa.niffler.jupiter.annotations.GeneratedUser;
+import guru.qa.niffler.model.UserJson;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -16,29 +17,28 @@ import org.openqa.selenium.Cookie;
 
 import java.io.IOException;
 
-import static guru.qa.niffler.jupiter.extensions.DBUserExtension.AUTH_USER;
-import static guru.qa.niffler.jupiter.extensions.DBUserExtension.NAMESPACE_USER;
+import static guru.qa.niffler.jupiter.extensions.CreateUserExtension.NESTED;
 
 public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecutionCallback {
 
     private final AuthServiceClient authServiceClient = new AuthServiceClient();
 
+
     @Override
     public void beforeEach(ExtensionContext extensionContext) throws Exception {
-        ApiLogin apiLoginAnnotation = extensionContext.getRequiredTestMethod().getAnnotation(ApiLogin.class);
-        AddUserToDB addUserToDbAnnotation = extensionContext.getRequiredTestMethod().getAnnotation(AddUserToDB.class);
-        String username, password;
-        if (addUserToDbAnnotation != null) {
-            AuthUserEntity authUserEntity = extensionContext.getStore(NAMESPACE_USER).get(AUTH_USER, AuthUserEntity.class);
-            username = authUserEntity.getUsername();
-            password = authUserEntity.getPassword();
-        } else {
-            username = apiLoginAnnotation.username();
-            password = apiLoginAnnotation.password();
+        ApiLogin annotation = extensionContext.getRequiredTestMethod().getAnnotation(ApiLogin.class);
+        if (annotation != null) {
+            GenerateUser user = annotation.user();
+            if (user.handleAnnotation()) {
+                UserJson createdUser = extensionContext.getStore(NESTED).get(
+                        GeneratedUser.Selector.NESTED,
+                        UserJson.class
+                );
+                doLogin(createdUser.getUsername(), createdUser.getPassword());
+            } else {
+                doLogin(annotation.username(), annotation.password());
+            }
         }
-        doLogin(username, password);
-
-
     }
 
     @Override
@@ -64,3 +64,21 @@ public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecution
         WebDriverRunner.getWebDriver().manage().addCookie(jsessionIdCookie);
     }
 }
+
+
+//    Old Impl
+//    @Override
+//    public void beforeEach(ExtensionContext extensionContext) throws Exception {
+//        ApiLogin apiLoginAnnotation = extensionContext.getRequiredTestMethod().getAnnotation(ApiLogin.class);
+//        AddUserToDB addUserToDbAnnotation = extensionContext.getRequiredTestMethod().getAnnotation(AddUserToDB.class);
+//        String username, password;
+//        if (addUserToDbAnnotation != null) {
+//            AuthUserEntity authUserEntity = extensionContext.getStore(NAMESPACE_USER).get(AUTH_USER, AuthUserEntity.class);
+//            username = authUserEntity.getUsername();
+//            password = authUserEntity.getPassword();
+//        } else {
+//            username = apiLoginAnnotation.username();
+//            password = apiLoginAnnotation.password();
+//        }
+//        doLogin(username, password);
+//    }
