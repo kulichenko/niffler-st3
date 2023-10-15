@@ -10,4 +10,6 @@ public interface UserDataUserDAO {
     void deleteUserFromUserData(UserDataUserEntity user);
 
     UserDataUserEntity getUserInUserDataByUsername(String username);
+
+    void addFriendForUser(boolean pending, UserDataUserEntity user, UserDataUserEntity friend);
 }

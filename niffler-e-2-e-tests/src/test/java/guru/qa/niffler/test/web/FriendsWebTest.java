@@ -2,6 +2,7 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Condition;
 import guru.qa.niffler.jupiter.annotations.ApiLogin;
+import guru.qa.niffler.jupiter.annotations.Friend;
 import guru.qa.niffler.jupiter.annotations.GenerateUser;
 import guru.qa.niffler.jupiter.annotations.GeneratedUser;
 import guru.qa.niffler.jupiter.annotations.IncomeInvitation;
@@ -35,6 +36,7 @@ public class FriendsWebTest extends BaseWebTest {
 
     @ApiLogin(
             user = @GenerateUser(
+                    friends = @Friend,
                     incomeInvitations = @IncomeInvitation
             )
     )

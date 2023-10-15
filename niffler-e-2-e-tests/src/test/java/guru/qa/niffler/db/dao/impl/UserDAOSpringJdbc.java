@@ -151,4 +151,9 @@ public class UserDAOSpringJdbc implements AuthUserDAO, UserDataUserDAO {
     public UserDataUserEntity getUserInUserDataByUsername(String username) {
         return null;
     }
+
+    @Override
+    public void addFriendForUser(boolean pending, UserDataUserEntity user, UserDataUserEntity friend) {
+
+    }
 }

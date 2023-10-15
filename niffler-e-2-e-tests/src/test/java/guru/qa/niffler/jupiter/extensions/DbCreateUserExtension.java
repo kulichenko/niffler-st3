@@ -4,7 +4,9 @@ package guru.qa.niffler.jupiter.extensions;
 import guru.qa.niffler.db.model.auth.AuthUserEntity;
 import guru.qa.niffler.db.model.auth.Authority;
 import guru.qa.niffler.db.model.auth.AuthorityEntity;
+import guru.qa.niffler.db.model.userdata.UserDataUserEntity;
 import guru.qa.niffler.db.repository.UserRepository;
+import guru.qa.niffler.db.repository.UserRepositoryHibernate;
 import guru.qa.niffler.db.repository.UserRepositorySpringJdbc;
 import guru.qa.niffler.jupiter.annotations.GenerateUser;
 import guru.qa.niffler.model.UserJson;
@@ -20,6 +22,7 @@ public class DbCreateUserExtension extends CreateUserExtension {
 
     private static final String DEFAULT_PASSWORD = "12345";
     private final UserRepository userRepository = new UserRepositorySpringJdbc();
+    private final UserRepository userRepositoryHibernate = new UserRepositoryHibernate();
 
     @Override
     protected UserJson createUserForTest(GenerateUser annotation) {
@@ -45,8 +48,21 @@ public class DbCreateUserExtension extends CreateUserExtension {
     }
 
     @Override
-    protected List<UserJson> createFriendsIfPresent(GenerateUser annotation) {
-        return Collections.emptyList();
+    protected List<UserJson> createFriendsIfPresent(GenerateUser annotation, UserJson currentUser) {
+        List<UserJson> result = new ArrayList<>();
+        UserDataUserEntity currentUserEntity = userRepositoryHibernate.getUserInUserDataByUsername(currentUser.getUsername());
+
+        if (annotation.friends().handleAnnotation()) {
+            int friendsQty = annotation.friends().count();
+            for (int i = 0; i < friendsQty; i++) {
+                UserJson friend = createUserForTest(annotation);
+                friend.setFriends(Collections.singletonList(currentUser));
+                result.add(friend);
+                userRepositoryHibernate.addFriendForUser(true, currentUserEntity, userRepositoryHibernate.getUserInUserDataByUsername(friend.getUsername()));
+            }
+        }
+        currentUser.setFriends(result);
+        return result;
     }
 
     @Override
