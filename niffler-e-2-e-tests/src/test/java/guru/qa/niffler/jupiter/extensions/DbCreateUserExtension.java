@@ -41,7 +41,7 @@ public class DbCreateUserExtension extends CreateUserExtension {
                     return ae;
                 }).toList()));
 
-        userRepository.createUserForTest(authUser);
+        userRepositoryHibernate.createUserForTest(authUser);
         UserJson result = UserJson.fromEntity(authUser);
         result.setPassword(DEFAULT_PASSWORD);
         return result;
@@ -59,6 +59,7 @@ public class DbCreateUserExtension extends CreateUserExtension {
                 friend.setFriends(Collections.singletonList(currentUser));
                 result.add(friend);
                 userRepositoryHibernate.addFriendForUser(false, currentUserEntity, userRepositoryHibernate.getUserInUserDataByUsername(friend.getUsername()));
+                userRepositoryHibernate.addFriendForUser(false, userRepositoryHibernate.getUserInUserDataByUsername(friend.getUsername()), currentUserEntity);
             }
         }
         currentUser.setFriends(result);
