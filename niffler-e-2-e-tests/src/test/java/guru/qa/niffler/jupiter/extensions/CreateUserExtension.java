@@ -27,8 +27,8 @@ public abstract class CreateUserExtension implements BeforeEachCallback, Paramet
         for (Map.Entry<GeneratedUser.Selector, GenerateUser> entry : usersForTest.entrySet()) {
             UserJson user = createUserForTest(entry.getValue());
             user.setFriends(createFriendsIfPresent(entry.getValue(), user));
-            user.setIncomeInvitations(createIncomeInvitationsIfPresent(entry.getValue()));
-            user.setOutcomeInvitations(createOutcomeInvitationsIfPresent(entry.getValue()));
+            user.setIncomeInvitations(createIncomeInvitationsIfPresent(entry.getValue(), user));
+            user.setOutcomeInvitations(createOutcomeInvitationsIfPresent(entry.getValue(), user));
             extensionContext.getStore(ExtensionContext.Namespace.create(entry.getKey()))
                     .put(entry.getKey(), user);
         }
@@ -51,9 +51,9 @@ public abstract class CreateUserExtension implements BeforeEachCallback, Paramet
 
     protected abstract List<UserJson> createFriendsIfPresent(GenerateUser annotation, UserJson currentUser);
 
-    protected abstract List<UserJson> createIncomeInvitationsIfPresent(GenerateUser annotation);
+    protected abstract List<UserJson> createIncomeInvitationsIfPresent(GenerateUser annotation, UserJson currentUser);
 
-    protected abstract List<UserJson> createOutcomeInvitationsIfPresent(GenerateUser annotation);
+    protected abstract List<UserJson> createOutcomeInvitationsIfPresent(GenerateUser annotation, UserJson currentUser);
 
 
     private Map<GeneratedUser.Selector, GenerateUser> usersForTest(ExtensionContext extensionContext) {

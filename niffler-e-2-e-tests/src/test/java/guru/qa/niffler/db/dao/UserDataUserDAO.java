@@ -11,5 +11,5 @@ public interface UserDataUserDAO {
 
     UserDataUserEntity getUserInUserDataByUsername(String username);
 
-    void addFriendForUser(boolean pending, UserDataUserEntity user, UserDataUserEntity friend);
+    void addFriendForUser(UserDataUserEntity user);
 }

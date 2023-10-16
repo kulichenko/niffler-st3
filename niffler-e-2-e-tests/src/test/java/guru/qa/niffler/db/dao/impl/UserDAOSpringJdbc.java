@@ -153,7 +153,7 @@ public class UserDAOSpringJdbc implements AuthUserDAO, UserDataUserDAO {
     }
 
     @Override
-    public void addFriendForUser(boolean pending, UserDataUserEntity user, UserDataUserEntity friend) {
+    public void addFriendForUser(UserDataUserEntity user) {
 
     }
 }

@@ -6,6 +6,7 @@ import guru.qa.niffler.jupiter.annotations.Friend;
 import guru.qa.niffler.jupiter.annotations.GenerateUser;
 import guru.qa.niffler.jupiter.annotations.GeneratedUser;
 import guru.qa.niffler.jupiter.annotations.IncomeInvitation;
+import guru.qa.niffler.jupiter.annotations.OutcomeInvitation;
 import guru.qa.niffler.model.UserJson;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.Test;
@@ -36,8 +37,9 @@ public class FriendsWebTest extends BaseWebTest {
 
     @ApiLogin(
             user = @GenerateUser(
-                    friends = @Friend,
-                    incomeInvitations = @IncomeInvitation
+                    friends = @Friend(count = 2),
+                    incomeInvitations = @IncomeInvitation,
+                    outcomeInvitations = @OutcomeInvitation
             )
     )
     @GenerateUser

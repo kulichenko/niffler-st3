@@ -49,8 +49,7 @@ public class UserDataUserDAOHibernate extends JpaService implements UserDataUser
     }
 
     @Override
-    public void addFriendForUser(boolean pending, UserDataUserEntity user, UserDataUserEntity friend) {
-        user.addFriends(pending, friend);
+    public void addFriendForUser(UserDataUserEntity user) {
         merge(user);
     }
 }

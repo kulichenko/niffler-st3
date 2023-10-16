@@ -30,10 +30,9 @@ public abstract class AbstractUserRepository implements UserRepository {
 
     @Override
     public void addFriendForUser(boolean pending, UserDataUserEntity user, UserDataUserEntity friend) {
-        udUserDAO.addFriendForUser(pending, user, friend);
+        user.addFriends(pending, friend);
+        udUserDAO.addFriendForUser(user);
     }
-
-    ;
 
     public UserDataUserEntity getUserInUserDataByUsername(String username) {
         return udUserDAO.getUserInUserDataByUsername(username);

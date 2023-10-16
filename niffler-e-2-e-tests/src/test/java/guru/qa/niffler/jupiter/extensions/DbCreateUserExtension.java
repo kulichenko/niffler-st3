@@ -58,20 +58,47 @@ public class DbCreateUserExtension extends CreateUserExtension {
                 UserJson friend = createUserForTest(annotation);
                 friend.setFriends(Collections.singletonList(currentUser));
                 result.add(friend);
-                userRepositoryHibernate.addFriendForUser(true, currentUserEntity, userRepositoryHibernate.getUserInUserDataByUsername(friend.getUsername()));
+                userRepositoryHibernate.addFriendForUser(false, currentUserEntity, userRepositoryHibernate.getUserInUserDataByUsername(friend.getUsername()));
             }
         }
         currentUser.setFriends(result);
+
         return result;
     }
 
     @Override
-    protected List<UserJson> createIncomeInvitationsIfPresent(GenerateUser annotation) {
-        return Collections.emptyList();
+    protected List<UserJson> createIncomeInvitationsIfPresent(GenerateUser annotation, UserJson currentUser) {
+        List<UserJson> result = new ArrayList<>();
+        UserDataUserEntity currentUserEntity = userRepositoryHibernate.getUserInUserDataByUsername(currentUser.getUsername());
+
+        if (annotation.incomeInvitations().handleAnnotation()) {
+            int invitationsQty = annotation.incomeInvitations().count();
+            for (int i = 0; i < invitationsQty; i++) {
+                UserJson friend = createUserForTest(annotation);
+                friend.setOutcomeInvitations(Collections.singletonList(currentUser));
+                result.add(friend);
+                userRepositoryHibernate.addFriendForUser(true, userRepositoryHibernate.getUserInUserDataByUsername(friend.getUsername()), currentUserEntity);
+            }
+        }
+        currentUser.setIncomeInvitations(result);
+        return result;
     }
 
     @Override
-    protected List<UserJson> createOutcomeInvitationsIfPresent(GenerateUser annotation) {
-        return Collections.emptyList();
+    protected List<UserJson> createOutcomeInvitationsIfPresent(GenerateUser annotation, UserJson currentUser) {
+        List<UserJson> result = new ArrayList<>();
+        UserDataUserEntity currentUserEntity = userRepositoryHibernate.getUserInUserDataByUsername(currentUser.getUsername());
+
+        if (annotation.incomeInvitations().handleAnnotation()) {
+            int invitationsQty = annotation.incomeInvitations().count();
+            for (int i = 0; i < invitationsQty; i++) {
+                UserJson friend = createUserForTest(annotation);
+                friend.setIncomeInvitations(Collections.singletonList(currentUser));
+                result.add(friend);
+                userRepositoryHibernate.addFriendForUser(true, currentUserEntity, userRepositoryHibernate.getUserInUserDataByUsername(friend.getUsername()));
+            }
+        }
+        currentUser.setOutcomeInvitations(result);
+        return result;
     }
 }
