@@ -33,4 +33,6 @@ public interface Config {
     String nifflerAuthUrl();
 
     String nifflerSpendUrl();
+
+    String nifflerUserDataUrl();
 }

@@ -1,5 +1,6 @@
 package guru.qa.niffler.test.web;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import guru.qa.niffler.jupiter.annotations.ApiLogin;
 import guru.qa.niffler.jupiter.annotations.Friend;
@@ -8,46 +9,80 @@ import guru.qa.niffler.jupiter.annotations.GeneratedUser;
 import guru.qa.niffler.jupiter.annotations.IncomeInvitation;
 import guru.qa.niffler.jupiter.annotations.OutcomeInvitation;
 import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.pages.FriendsPage;
+import guru.qa.niffler.pages.PeoplePage;
 import io.qameta.allure.AllureId;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
-import static guru.qa.niffler.jupiter.annotations.GeneratedUser.Selector.NESTED;
-import static guru.qa.niffler.jupiter.annotations.GeneratedUser.Selector.OUTER;
 
 public class FriendsWebTest extends BaseWebTest {
-//    @BeforeEach
-//    void doLogin(@User(userType = WITH_FRIENDS) UserJson userForTest) {
-//        Selenide.open("http://127.0.0.1:3000/main");
-//        $("a[href*='redirect']").click();
-//        $("input[name='username']").setValue(userForTest.getUsername());
-//        $("input[name='password']").setValue(userForTest.getPassword());
-//        $("button[type='submit']").click();
-//    }
-
 
     @Test
-    @AllureId("10")
-    void friendsShouldBeVisibleInTable() throws InterruptedException {
-        $("li[data-tooltip-id=friends]").click();
-        $(".main-content__section").$("tbody").$$("td")
-                .findBy(Condition.text("You are friends")).shouldBe(Condition.visible);
-    }
-
+    @AllureId("15")
+    @DisplayName("Друзья должны быть видны на странице Friends ")
     @ApiLogin(
             user = @GenerateUser(
-                    friends = @Friend(count = 2),
-                    incomeInvitations = @IncomeInvitation,
-                    outcomeInvitations = @OutcomeInvitation
-            )
+                    friends = @Friend(count = 2))
     )
-    @GenerateUser
-    @Test
-    @AllureId("21324")
-    void incomeInvitationShouldBePresentInTable(@GeneratedUser(selector = NESTED) UserJson userForTest,
-                                                @GeneratedUser(selector = OUTER) UserJson another) {
-        open(cfg.baseUrl() + "/main");
-        System.out.println();
+    void friendSholdBeVisibleOnFriendPage(@GeneratedUser UserJson userForTest) {
+        open(cfg.baseUrl() + FriendsPage.URL, FriendsPage.class)
+                .checkPageContent();
+        $(".main-content__section")
+                .$("tbody")
+                .$$("td")
+                .find(Condition.text("You are friends"));
     }
+
+    @Test
+    @AllureId("16")
+    @DisplayName("Приглашения дружить должны быть видны на странице All people ")
+    @ApiLogin(
+            user = @GenerateUser(
+                    incomeInvitations = @IncomeInvitation(count = 2))
+    )
+    void incomeInvitationSholdBeVisibleOnPeoplePage(@GeneratedUser UserJson userForTest) {
+        open(cfg.baseUrl() + PeoplePage.URL, PeoplePage.class)
+                .checkPageContent();
+        $(".main-content__section")
+                .$("tbody")
+                .$$("[data-tooltip-content='Submit invitation']")
+                .shouldBe(CollectionCondition.size(2));
+    }
+
+    @Test
+    @AllureId("17")
+    @DisplayName("Приглашения дружить должны быть видны на странице Friends ")
+    @ApiLogin(
+            user = @GenerateUser(
+                    incomeInvitations = @IncomeInvitation(count = 2))
+    )
+    void incomeInvitationSholdBeVisibleOnFriendPage(@GeneratedUser UserJson userForTest) {
+        open(cfg.baseUrl() + FriendsPage.URL, FriendsPage.class)
+                .checkPageContent();
+        $(".main-content__section")
+                .$("tbody")
+                .$$("[data-tooltip-content='Submit invitation']")
+                .shouldBe(CollectionCondition.size(2));
+    }
+
+    @Test
+    @AllureId("18")
+    @DisplayName("Отправленные приглашения должны быть видны на странице People ")
+    @ApiLogin(
+            user = @GenerateUser(
+                    outcomeInvitations = @OutcomeInvitation)
+    )
+    void outcomeInvitationSholdBeVisibleOnPeoplePage(@GeneratedUser UserJson userForTest) {
+        open(cfg.baseUrl() + PeoplePage.URL, PeoplePage.class)
+                .checkPageContent();
+        $(".main-content__section")
+                .$("tbody")
+                .$$("td")
+                .find(Condition.text("Pending invitation"));
+    }
+
+
 }

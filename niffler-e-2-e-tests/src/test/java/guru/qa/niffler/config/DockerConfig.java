@@ -45,4 +45,9 @@ public class DockerConfig implements Config {
     public String nifflerSpendUrl() {
         return "niffler-spend:8093";
     }
+
+    @Override
+    public String nifflerUserDataUrl() {
+        return null;
+    }
 }

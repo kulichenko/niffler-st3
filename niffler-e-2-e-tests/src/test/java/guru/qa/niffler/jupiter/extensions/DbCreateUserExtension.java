@@ -90,8 +90,8 @@ public class DbCreateUserExtension extends CreateUserExtension {
         List<UserJson> result = new ArrayList<>();
         UserDataUserEntity currentUserEntity = userRepositoryHibernate.getUserInUserDataByUsername(currentUser.getUsername());
 
-        if (annotation.incomeInvitations().handleAnnotation()) {
-            int invitationsQty = annotation.incomeInvitations().count();
+        if (annotation.outcomeInvitations().handleAnnotation()) {
+            int invitationsQty = annotation.outcomeInvitations().count();
             for (int i = 0; i < invitationsQty; i++) {
                 UserJson friend = createUserForTest(annotation);
                 friend.setIncomeInvitations(Collections.singletonList(currentUser));
