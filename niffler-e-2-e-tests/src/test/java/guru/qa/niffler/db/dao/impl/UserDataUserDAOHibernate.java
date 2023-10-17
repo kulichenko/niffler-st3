@@ -32,9 +32,7 @@ public class UserDataUserDAOHibernate extends JpaService implements UserDataUser
     @Override
     public void deleteUserByUsernameInUserData(String username) {
         UserDataUserEntity
-                user = em.createQuery("SELECT u FROM UserDataUserEntity u WHERE u.username=:username", UserDataUserEntity.class)
-                .setParameter("username", username)
-                .getSingleResult();
+                user = getUserInUserDataByUsername(username);
         deleteUserFromUserData(user);
     }
 
@@ -45,6 +43,13 @@ public class UserDataUserDAOHibernate extends JpaService implements UserDataUser
 
     @Override
     public UserDataUserEntity getUserInUserDataByUsername(String username) {
-        return null;
+        return em.createQuery("SELECT u FROM UserDataUserEntity u WHERE u.username=:username", UserDataUserEntity.class)
+                .setParameter("username", username)
+                .getSingleResult();
+    }
+
+    @Override
+    public void addFriendForUser(UserDataUserEntity user) {
+        merge(user);
     }
 }

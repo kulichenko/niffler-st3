@@ -8,8 +8,8 @@ import guru.qa.niffler.api.context.SessionStorageContext;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotations.ApiLogin;
 import guru.qa.niffler.jupiter.annotations.GenerateUser;
-import guru.qa.niffler.jupiter.annotations.GeneratedUser;
 import guru.qa.niffler.model.UserJson;
+import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -31,7 +31,7 @@ public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecution
             GenerateUser user = annotation.user();
             if (user.handleAnnotation()) {
                 UserJson createdUser = extensionContext.getStore(NESTED).get(
-                        GeneratedUser.Selector.NESTED,
+                        getAllureId(extensionContext),
                         UserJson.class
                 );
                 doLogin(createdUser.getUsername(), createdUser.getPassword());
@@ -62,6 +62,14 @@ public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecution
         Selenide.sessionStorage().setItem("codeVerifier", sessionStorageContext.getCodeVerifier());
         Cookie jsessionIdCookie = new Cookie("JSESSIONID", CookieContext.getInstance().getJSessionIdCookieValue());
         WebDriverRunner.getWebDriver().manage().addCookie(jsessionIdCookie);
+    }
+
+    private String getAllureId(ExtensionContext context) {
+        var allureId = context.getRequiredTestMethod().getAnnotation(AllureId.class);
+        if (allureId == null) {
+            throw new IllegalStateException("Annotation @AllureId must be present!");
+        }
+        return allureId.value();
     }
 }
 

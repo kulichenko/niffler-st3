@@ -152,6 +152,11 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
     }
 
     @Override
+    public void addFriendForUser(UserDataUserEntity user) {
+
+    }
+
+    @Override
     public AuthUserEntity getUserById(UUID userId) {
         var user = new AuthUserEntity();
         try (Connection conn = authDs.getConnection()) {
